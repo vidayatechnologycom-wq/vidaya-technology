@@ -6,7 +6,7 @@ function renderNavbar() {
   <nav class="navbar">
     <div class="nav-inner">
       <a href="/index.html" class="nav-logo">
-        <img src="/logo.jpeg" alt="Vidaya Technology" style="height:44px;width:auto;object-fit:contain;">
+        <img src="/logo.jpeg" alt="Vidaya Technology" style="height:52px;width:auto;object-fit:contain;">
       </a>
       <ul class="nav-links">
         <li><a href="/index.html" class="nav-link">Home</a></li>
