@@ -1,17 +1,12 @@
 // ============================================================
 // SHARED COMPONENTS — Navbar & Footer
 // ============================================================
-
 function renderNavbar() {
   return `
   <nav class="navbar">
     <div class="nav-inner">
       <a href="/index.html" class="nav-logo">
-        <div class="nav-logo-icon">V</div>
-        <div class="nav-logo-text">
-          Vidaya Technology
-          <span>& Management</span>
-        </div>
+        <img src="/logo.jpeg" alt="Vidaya Technology" style="height:44px;width:auto;object-fit:contain;">
       </a>
       <ul class="nav-links">
         <li><a href="/index.html" class="nav-link">Home</a></li>
@@ -31,19 +26,12 @@ function renderNavbar() {
     </div>
   </nav>`;
 }
-
 function renderFooter() {
   return `
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="nav-logo">
-          <div class="nav-logo-icon">V</div>
-          <div class="nav-logo-text" style="color:#fff">
-            Vidaya Technology
-            <span>& Management</span>
-          </div>
-        </div>
+        <img src="/logo.jpeg" alt="Vidaya Technology" style="height:54px;width:auto;object-fit:contain;margin-bottom:.75rem;">
         <p>Industry-focused training in Software, AI & IT. Empowering learners with practical, real-world skills since 2020.</p>
       </div>
       <div class="footer-col">
@@ -73,24 +61,20 @@ function renderFooter() {
     </div>
   </footer>`;
 }
-
 function initNavbar() {
   const nav = document.getElementById('navbar-placeholder');
   if (nav) nav.innerHTML = renderNavbar();
   const foot = document.getElementById('footer-placeholder');
   if (foot) foot.innerHTML = renderFooter();
-
   // Hamburger
   document.addEventListener('click', (e) => {
     if (e.target.closest('#hamburger')) {
       document.querySelector('.navbar').classList.toggle('nav-mobile-open');
     }
   });
-
   setActiveNav();
   updateNavAuth();
 }
-
 // Scroll reveal
 function initScrollReveal() {
   const els = document.querySelectorAll('.fade-in');
@@ -99,5 +83,4 @@ function initScrollReveal() {
   }, { threshold: 0.1 });
   els.forEach(el => obs.observe(el));
 }
-
 document.addEventListener('DOMContentLoaded', () => { initNavbar(); initScrollReveal(); });
