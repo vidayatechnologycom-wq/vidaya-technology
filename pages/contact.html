@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/index.html">Home</a> / Contact</div>
+    <h1>Contact Us</h1>
+    <p>We'd love to hear from you. Reach out for any queries or enquiries.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info-card">
+        <h3>Get in Touch</h3>
+        <p>Our team is here to help you with any questions about courses, services, or admissions.</p>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Location</strong>
+            <span>Flat No.3 Vinayaga Nagar, Rakkipalayam, Narashimanaikenpalayam, Coimbatore</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <strong>Phone</strong>
+            <span>+91 9176769943</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div class="contact-item-text">
+            <strong>Email</strong>
+            <span>vidayatechnology@gmail.com</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div class="contact-item-text">
+            <strong>Hours</strong>
+            <span>Mon–Sat: 9:00 AM – 6:00 PM IST</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--white);border-radius:var(--radius-lg);padding:2.5rem;border:1px solid var(--gray-200);box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:1.5rem;">Send a Message</h3>
+        <form id="contact-form">
+          <div class="form-group">
+            <label class="form-label">Your Name *</label>
+            <input type="text" id="cf-name" class="form-input" placeholder="John Doe" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="cf-email" class="form-input" placeholder="john@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <input type="text" id="cf-subject" class="form-input" placeholder="Course enquiry" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea id="cf-message" class="form-textarea" placeholder="Tell us how we can help you..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-blue btn-full" id="submit-btn">
+            Send Message ✉️
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+document.getElementById('contact-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+
+  const payload = {
+    name: document.getElementById('cf-name').value.trim(),
+    email: document.getElementById('cf-email').value.trim(),
+    subject: document.getElementById('cf-subject').value.trim(),
+    message: document.getElementById('cf-message').value.trim()
+  };
+
+  const { error } = await sb.from('contact_messages').insert([payload]);
+  btn.disabled = false; btn.textContent = 'Send Message ✉️';
+
+  if (error) {
+    showNotification('Failed to send message. Please try again.', 'error');
+  } else {
+    showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+    document.getElementById('contact-form').reset();
+  }
+});
+</script>
+</body>
+</html>

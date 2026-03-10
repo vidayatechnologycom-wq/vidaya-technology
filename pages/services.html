@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/index.html">Home</a> / Services</div>
+    <h1>Our Services</h1>
+    <p>Professional services to support your learning and career journey.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="services-grid" class="cards-grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+const icons = ['⚡','🔬','🎯','🧑‍💻','📋','🌐','🏆','💡'];
+async function loadServices() {
+  const el = document.getElementById('services-grid');
+  const { data, error } = await sb.from('services').select('*').order('title');
+  if (error) { el.innerHTML = `<p style="color:var(--error)">Failed to load services.</p>`; return; }
+  if (!data?.length) { el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚙️</div><p>No services listed yet.</p></div>`; return; }
+  el.innerHTML = data.map((s, i) => `
+    <div class="card fade-in" style="border-top:3px solid var(--blue-light)">
+      <div class="card-body">
+        <div style="font-size:2.5rem;margin-bottom:.75rem">${icons[i % icons.length]}</div>
+        <div class="card-title">${s.title}</div>
+        <p class="card-desc">${s.description}</p>
+      </div>
+      <div class="card-footer">
+        <a href="/pages/contact.html" class="btn btn-outline btn-sm">Enquire →</a>
+      </div>
+    </div>
+  `).join('');
+  initScrollReveal();
+}
+loadServices();
+</script>
+</body>
+</html>

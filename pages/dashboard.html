@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <button class="sidebar-link active" onclick="showSection('overview')"><span class="icon">🏠</span> Overview</button>
+      <button class="sidebar-link" onclick="showSection('courses')"><span class="icon">📚</span> Courses</button>
+      <button class="sidebar-link" onclick="showSection('services')"><span class="icon">⚡</span> Services</button>
+      <button class="sidebar-link" onclick="showSection('research')"><span class="icon">🔬</span> Research</button>
+      <button class="sidebar-link" onclick="showSection('shop')"><span class="icon">🛒</span> Shop</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <button class="sidebar-link" onclick="showSection('profile')"><span class="icon">👤</span> Profile</button>
+      <button class="sidebar-link" onclick="signOut()"><span class="icon">🚪</span> Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dash-content">
+    <!-- Overview Section -->
+    <div id="section-overview">
+      <div class="dash-header">
+        <h1 id="welcome-msg">Welcome back! 👋</h1>
+        <p>Here's what's available on your learning platform.</p>
+      </div>
+      <div class="profile-card" id="profile-card">
+        <div class="profile-avatar" id="avatar-letter">?</div>
+        <div class="profile-info">
+          <h2 id="profile-name">Loading...</h2>
+          <p id="profile-email">-</p>
+          <div class="profile-role"><span class="badge badge-blue">Student</span></div>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon blue">📚</div><div><div class="stat-num" id="count-courses">-</div><div class="stat-label">Courses Available</div></div></div>
+        <div class="stat-card"><div class="stat-icon cyan">⚡</div><div><div class="stat-num" id="count-services">-</div><div class="stat-label">Services</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber">🔬</div><div><div class="stat-num" id="count-research">-</div><div class="stat-label">Research Posts</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">🛒</div><div><div class="stat-num" id="count-shop">-</div><div class="stat-label">Shop Items</div></div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><h3>Recent Courses</h3><a href="/pages/courses.html" class="btn btn-outline btn-sm">View All</a></div>
+        <div id="recent-courses"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Courses Section -->
+    <div id="section-courses" class="hidden">
+      <div class="dash-header"><h1>All Courses</h1><p>Browse all available courses.</p></div>
+      <div class="cards-grid" id="dash-courses"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- Services Section -->
+    <div id="section-services" class="hidden">
+      <div class="dash-header"><h1>Services</h1><p>Professional services available to you.</p></div>
+      <div class="cards-grid" id="dash-services"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- Research Section -->
+    <div id="section-research" class="hidden">
+      <div class="dash-header"><h1>Research</h1><p>Latest research posts and publications.</p></div>
+      <div class="cards-grid" id="dash-research"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- Shop Section -->
+    <div id="section-shop" class="hidden">
+      <div class="dash-header"><h1>Shop</h1><p>Books and resources available to purchase.</p></div>
+      <div class="cards-grid" id="dash-shop"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="section-profile" class="hidden">
+      <div class="dash-header"><h1>My Profile</h1><p>Your account information.</p></div>
+      <div style="background:var(--white);border-radius:var(--radius-lg);padding:2rem;border:1px solid var(--gray-200);max-width:500px;">
+        <div class="profile-card" style="margin-bottom:0;border-radius:var(--radius);">
+          <div class="profile-avatar" id="profile-avatar2">?</div>
+          <div class="profile-info">
+            <h2 id="pf-name" style="color:#fff">-</h2>
+            <p id="pf-email" style="color:rgba(255,255,255,.65)">-</p>
+            <span class="badge badge-blue profile-role">Student</span>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <div class="form-group">
+            <label class="form-label">Member Since</label>
+            <div id="pf-joined" style="font-size:.95rem;color:var(--gray-600);">-</div>
+          </div>
+          <a href="/pages/contact.html" class="btn btn-blue btn-full mt-2">Contact Support</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+let currentUser = null;
+let userData = null;
+
+async function init() {
+  currentUser = await requireAuth();
+  if (!currentUser) return;
+
+  const { data } = await sb.from('users').select('*').eq('id', currentUser.id).single();
+  userData = data;
+
+  if (userData) {
+    const name = userData.name || currentUser.email;
+    document.getElementById('welcome-msg').textContent = `Welcome back, ${name}! 👋`;
+    document.getElementById('profile-name').textContent = name;
+    document.getElementById('profile-email').textContent = currentUser.email;
+    document.getElementById('avatar-letter').textContent = name[0].toUpperCase();
+    document.getElementById('pf-name').textContent = name;
+    document.getElementById('pf-email').textContent = currentUser.email;
+    document.getElementById('profile-avatar2').textContent = name[0].toUpperCase();
+    document.getElementById('pf-joined').textContent = new Date(currentUser.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+  }
+  loadStats();
+  loadRecentCourses();
+}
+
+async function loadStats() {
+  const [c, s, r, sh] = await Promise.all([
+    sb.from('courses').select('id', {count:'exact'}),
+    sb.from('services').select('id', {count:'exact'}),
+    sb.from('research').select('id', {count:'exact'}),
+    sb.from('shop').select('id', {count:'exact'})
+  ]);
+  document.getElementById('count-courses').textContent = c.count ?? 0;
+  document.getElementById('count-services').textContent = s.count ?? 0;
+  document.getElementById('count-research').textContent = r.count ?? 0;
+  document.getElementById('count-shop').textContent = sh.count ?? 0;
+}
+
+async function loadRecentCourses() {
+  const { data } = await sb.from('courses').select('*').limit(5);
+  const el = document.getElementById('recent-courses');
+  if (!data?.length) { el.innerHTML = '<div class="empty-state"><p>No courses yet.</p></div>'; return; }
+  el.innerHTML = `<table><thead><tr><th>Course</th><th>Description</th></tr></thead><tbody>
+    ${data.map(c => `<tr><td><strong>${c.title}</strong></td><td style="color:var(--gray-600);font-size:.875rem">${c.description?.slice(0,80)}...</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function showSection(name) {
+  document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`section-${name}`).classList.remove('hidden');
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  event.target.closest('.sidebar-link').classList.add('active');
+
+  if (name === 'courses') loadDashCourses();
+  if (name === 'services') loadDashServices();
+  if (name === 'research') loadDashResearch();
+  if (name === 'shop') loadDashShop();
+}
+
+async function loadDashCourses() {
+  const el = document.getElementById('dash-courses');
+  if (el.dataset.loaded) return;
+  const { data } = await sb.from('courses').select('*');
+  el.innerHTML = data?.length ? data.map(c => `<div class="card"><div class="card-body"><div class="card-title">${c.title}</div><p class="card-desc">${c.description}</p></div></div>`).join('') : '<div class="empty-state"><p>No courses yet.</p></div>';
+  el.dataset.loaded = '1';
+}
+async function loadDashServices() {
+  const el = document.getElementById('dash-services');
+  if (el.dataset.loaded) return;
+  const { data } = await sb.from('services').select('*');
+  el.innerHTML = data?.length ? data.map(s => `<div class="card"><div class="card-body"><div class="card-title">${s.title}</div><p class="card-desc">${s.description}</p></div></div>`).join('') : '<div class="empty-state"><p>No services yet.</p></div>';
+  el.dataset.loaded = '1';
+}
+async function loadDashResearch() {
+  const el = document.getElementById('dash-research');
+  if (el.dataset.loaded) return;
+  const { data } = await sb.from('research').select('*');
+  el.innerHTML = data?.length ? data.map(r => `<div class="card"><div class="card-body"><div class="card-title">${r.title}</div><p class="card-desc">${r.description}</p></div></div>`).join('') : '<div class="empty-state"><p>No research yet.</p></div>';
+  el.dataset.loaded = '1';
+}
+async function loadDashShop() {
+  const el = document.getElementById('dash-shop');
+  if (el.dataset.loaded) return;
+  const { data } = await sb.from('shop').select('*');
+  el.innerHTML = data?.length ? data.map(p => `<div class="card"><div class="card-body"><div class="card-title">${p.product_name}</div><div class="card-price">₹${Number(p.price).toLocaleString('en-IN')}</div></div></div>`).join('') : '<div class="empty-state"><p>No items yet.</p></div>';
+  el.dataset.loaded = '1';
+}
+
+init();
+</script>
+</body>
+</html>

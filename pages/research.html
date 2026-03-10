@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/index.html">Home</a> / Research</div>
+    <h1>Research</h1>
+    <p>Insights, publications, and thought leadership from our experts.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="research-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+async function loadResearch() {
+  const el = document.getElementById('research-grid');
+  const { data, error } = await sb.from('research').select('*').order('title');
+  if (error) { el.innerHTML = `<p style="color:var(--error)">Failed to load research posts.</p>`; return; }
+  if (!data?.length) { el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔬</div><p>No research posts yet.</p></div>`; return; }
+  el.innerHTML = data.map(r => `
+    <div class="card fade-in">
+      <div class="card-body">
+        <span class="badge badge-blue" style="margin-bottom:.75rem">Research</span>
+        <div class="card-title" style="font-size:1.1rem;margin-bottom:.6rem">${r.title}</div>
+        <p class="card-desc">${r.description}</p>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-green">Published</span>
+        <a href="/pages/contact.html" class="btn btn-ghost btn-sm">Learn More</a>
+      </div>
+    </div>
+  `).join('');
+  initScrollReveal();
+}
+loadResearch();
+</script>
+</body>
+</html>

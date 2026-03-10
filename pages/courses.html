@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courses — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/index.html">Home</a> / Courses</div>
+    <h1>All Courses</h1>
+    <p>Industry-focused training in AI, Data Science, Machine Learning & more.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="courses-grid" class="cards-grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+async function loadCourses() {
+  const el = document.getElementById('courses-grid');
+  const { data, error } = await sb.from('courses').select('*').order('title');
+  if (error) { el.innerHTML = `<p style="color:var(--error)">Failed to load courses. Please check your Supabase configuration.</p>`; return; }
+  if (!data?.length) { el.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><p>No courses available yet. Check back soon!</p></div>`; return; }
+  el.innerHTML = data.map(c => `
+    <div class="card fade-in">
+      <div class="card-img" style="background:linear-gradient(135deg,#0D2B55,#1A56DB);display:flex;align-items:center;justify-content:center;">
+        ${c.image ? `<img src="${c.image}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;">` : '<span style="font-size:3rem">📘</span>'}
+      </div>
+      <div class="card-body">
+        <span class="badge badge-blue" style="margin-bottom:.5rem">Course</span>
+        <div class="card-title">${c.title}</div>
+        <p class="card-desc">${c.description}</p>
+      </div>
+      <div class="card-footer">
+        <a href="/pages/login.html" class="btn btn-blue btn-sm">Enrol Now →</a>
+      </div>
+    </div>
+  `).join('');
+  initScrollReveal();
+}
+loadCourses();
+</script>
+</body>
+</html>

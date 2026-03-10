@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="auth-page">
+  <div class="form-card">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div class="nav-logo-icon" style="width:52px;height:52px;font-size:1.5rem;margin:0 auto .75rem;">V</div>
+      <div class="form-title">Create Account</div>
+      <p class="form-subtitle">Join Vidaya Technology & start learning today</p>
+    </div>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="name" class="form-input" placeholder="Your full name" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="email" class="form-input" placeholder="your@email.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Minimum 6 characters" required minlength="6" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" id="confirm-password" class="form-input" placeholder="Repeat your password" required />
+      </div>
+      <div id="reg-error" style="color:var(--error);font-size:.875rem;margin-bottom:.75rem;display:none;"></div>
+      <button type="submit" class="btn btn-blue btn-full" id="reg-btn">Create Account</button>
+    </form>
+
+    <div class="form-divider">or</div>
+    <div class="text-center" style="font-size:.9rem;color:var(--gray-600)">
+      Already have an account? <a href="/pages/login.html" style="color:var(--blue);font-weight:600;">Sign in</a>
+    </div>
+    <div class="text-center mt-2">
+      <a href="/index.html" style="font-size:.85rem;color:var(--gray-400);">← Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('reg-btn');
+  const errEl = document.getElementById('reg-error');
+  errEl.style.display = 'none';
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirm-password').value;
+
+  if (password !== confirm) {
+    errEl.textContent = 'Passwords do not match.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Creating account...';
+
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) {
+    errEl.textContent = error.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Create Account';
+    return;
+  }
+
+  // Insert into users table
+  if (data.user) {
+    await sb.from('users').insert([{ id: data.user.id, name, email, role: 'user' }]);
+  }
+
+  showNotification('Account created! Please check your email to verify, then login.', 'success');
+  setTimeout(() => window.location.href = '/pages/login.html', 2500);
+});
+</script>
+</body>
+</html>

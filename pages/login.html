@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="auth-page">
+  <div class="form-card">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div class="nav-logo-icon" style="width:52px;height:52px;font-size:1.5rem;margin:0 auto .75rem;">V</div>
+      <div class="form-title">Welcome Back</div>
+      <p class="form-subtitle">Sign in to your Vidaya Technology account</p>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="email" class="form-input" placeholder="your@email.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="••••••••" required />
+      </div>
+      <div id="login-error" style="color:var(--error);font-size:.875rem;margin-bottom:.75rem;display:none;"></div>
+      <button type="submit" class="btn btn-blue btn-full" id="login-btn">Sign In</button>
+    </form>
+
+    <div class="form-divider">or</div>
+    <div class="text-center" style="font-size:.9rem;color:var(--gray-600)">
+      Don't have an account? <a href="/pages/register.html" style="color:var(--blue);font-weight:600;">Register here</a>
+    </div>
+    <div class="text-center mt-2">
+      <a href="/index.html" style="font-size:.85rem;color:var(--gray-400);">← Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+// If already logged in, redirect
+getCurrentUser().then(async user => {
+  if (user) {
+    const role = await getCurrentUserRole();
+    window.location.href = role === 'admin' ? '/pages/admin.html' : '/pages/dashboard.html';
+  }
+});
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('login-btn');
+  const errEl = document.getElementById('login-error');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  errEl.style.display = 'none';
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errEl.textContent = error.message;
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Sign In';
+    return;
+  }
+
+  // Get user role
+  const { data: userData } = await sb.from('users').select('role').eq('id', data.user.id).single();
+  const role = userData?.role || 'user';
+  showNotification('Login successful! Redirecting...', 'success');
+  setTimeout(() => {
+    window.location.href = role === 'admin' ? '/pages/admin.html' : '/pages/dashboard.html';
+  }, 1000);
+});
+</script>
+</body>
+</html>

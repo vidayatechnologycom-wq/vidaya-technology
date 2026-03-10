@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — Vidaya Technology</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<div id="navbar-placeholder"></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/index.html">Home</a> / Shop</div>
+    <h1>Shop</h1>
+    <p>Books, resources, and course materials to support your learning.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="shop-grid" class="cards-grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/components.js"></script>
+<script>
+async function loadShop() {
+  const el = document.getElementById('shop-grid');
+  const { data, error } = await sb.from('shop').select('*').order('product_name');
+  if (error) { el.innerHTML = `<p style="color:var(--error)">Failed to load shop items.</p>`; return; }
+  if (!data?.length) { el.innerHTML = `<div class="empty-state"><div class="empty-icon">🛒</div><p>No items in the shop yet.</p></div>`; return; }
+  el.innerHTML = data.map(p => `
+    <div class="card fade-in">
+      <div class="card-img" style="background:linear-gradient(135deg,#0A1628,#0D2B55);display:flex;align-items:center;justify-content:center;">
+        ${p.image ? `<img src="${p.image}" alt="${p.product_name}" style="width:100%;height:100%;object-fit:cover;">` : '<span style="font-size:3rem">📦</span>'}
+      </div>
+      <div class="card-body">
+        <div class="card-title">${p.product_name}</div>
+        <div class="card-price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+      </div>
+      <div class="card-footer">
+        <a href="/pages/login.html" class="btn btn-blue btn-sm" style="width:100%;justify-content:center;">🛒 Buy Now</a>
+      </div>
+    </div>
+  `).join('');
+  initScrollReveal();
+}
+loadShop();
+</script>
+</body>
+</html>
