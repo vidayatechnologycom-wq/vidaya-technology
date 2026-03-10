@@ -15,6 +15,7 @@ function renderNavbar() {
         <li><a href="/pages/research.html" class="nav-link">Research</a></li>
         <li><a href="/pages/shop.html" class="nav-link">Shop</a></li>
         <li><a href="/pages/contact.html" class="nav-link">Contact</a></li>
+        <li><a href="/pages/about-developer.html" class="nav-link">Developer</a></li>
       </ul>
       <div class="nav-auth" id="nav-auth">
         <a href="/pages/login.html" class="btn-nav-outline">Login</a>
