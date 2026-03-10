@@ -47,6 +47,7 @@ function renderFooter() {
         <a href="/pages/contact.html">Contact Us</a>
         <a href="/pages/login.html">Login</a>
         <a href="/pages/register.html">Register</a>
+        <a href="/pages/about-developer.html">About Developer</a>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
