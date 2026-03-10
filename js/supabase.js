@@ -3,7 +3,7 @@
 // Replace these values with your actual Supabase project credentials
 // ============================================================
 const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0dHFveGlyYndqbGV0d29heG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTcyMDAsImV4cCI6MjA4ODY5MzIwMH0.awNyZLvJ1qSJCQzZ0IoPLIXMUcNeaV6rYozY2JpPWGU';
 
 // Initialize Supabase client
 const { createClient } = supabase;
