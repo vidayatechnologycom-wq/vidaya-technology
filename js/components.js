@@ -31,7 +31,7 @@ function renderFooter() {
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="/logo.jpeg" alt="Vidaya Technology" style="height:54px;width:auto;object-fit:contain;margin-bottom:.75rem;">
+        <img src="/logo.jpeg" alt="Vidaya Technology" style="height:84px;width:auto;object-fit:contain;margin-bottom:.75rem;">
         <p>Industry-focused training in Software, AI & IT. Empowering learners with practical, real-world skills since 2020.</p>
       </div>
       <div class="footer-col">
